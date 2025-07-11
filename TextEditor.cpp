@@ -1118,7 +1118,7 @@ void TextEditor::Render()
 	}
 }
 
-void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
+void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder, bool showLineNumbers)
 {
 	mWithinRender = true;
 	mTextChanged = false;
@@ -1139,7 +1139,7 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 		HandleMouseInputs();
 
 	ColorizeInternal();
-	Render(aBorder); // pass border as showLineNumbers
+	Render(showLineNumbers); // pass showLineNumbers as argument
 
 	if (mHandleKeyboardInputs)
 		ImGui::PopTabStop();
@@ -1151,17 +1151,6 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder)
 	ImGui::PopStyleColor();
 
 	mWithinRender = false;
-}
-
-// Overload Render to accept showLineNumbers
-void TextEditor::Render(bool showLineNumbers)
-{
-	// Draw line number (right aligned)
-	if (showLineNumbers) {
-		snprintf(buf, 16, "%d  ", lineNo + 1);
-		auto lineNoWidth = ImGui::GetFont()->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f, buf, nullptr, nullptr).x;
-		drawList->AddText(ImVec2(lineStartScreenPos.x + mTextStart - lineNoWidth, lineStartScreenPos.y), mPalette[(int)PaletteIndex::LineNumber], buf);
-	}
 }
 
 void TextEditor::SetText(const std::string & aText)
